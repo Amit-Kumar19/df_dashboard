@@ -19,23 +19,22 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required(login_url='login')
 def hello(request):
-    meta_val = MetaDetail.objects.all().order_by('-date_created')
+    meta_val = MetaDetails.objects.all().order_by('-date_created')
     page = request.GET.get('page', 1)
-    paginator = Paginator(meta_val, 5)
+    paginator = Paginator(meta_val, 10)
     try:
         meta_val = paginator.page(page)
     except PageNotAnInteger:
         meta_val = paginator.page(1)
     except EmptyPage:
         meta_val = paginator.page(paginator.num_pages)
-    context = {'profiles': meta_val}
+    context = {'keywords': meta_val}
 
     return render(request, 'apps/dashboard.html', context)
 
 
-
 @authenticated_user
-def loginUser(request):
+def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -54,4 +53,12 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
+
+def geeks_view(request,pk):
+    info = DbConnectionInfo.objects.filter(tbl_name=pk)
+    print(str(info.query))
+    context = {'connection_info': info}
+    print(info)
+    # return response
+    return render(request, "apps/dots.html",context)
 

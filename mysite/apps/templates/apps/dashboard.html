@@ -43,11 +43,9 @@
 <body>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
 </script>
-<script src="context-menu.js"></script>
 
 
 <h2>Data sources</h2>
-
 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
 
 <table id="myTable">
@@ -57,15 +55,24 @@
     <th style="col">Key</th>
     <th style="col">Created</th>
   </tr>
-  {% for profile in profiles%}
+  {% for keyword in keywords%}
   <tr>
-    <td>{{ profile.id }}</td>
-    <td>{{profile.tbl_name}}</td>
-    <td>{{ profile.meta_value }}</td>
-    <td>{{profile.date_created}}</td>
-    <td>
+    <td>{{ keyword.id }}</td>
+    <td>{{ keyword.tbl_name }}</td>
+    <td>{{ keyword.meta_value }}</td>
+    <td>{{keyword.date_created}}</td>
+      <td>
+        <div class="dropdown show">
+  <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Options
+  </a>
 
-    </td>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <a class="dropdown-item" href="{% url 'dots' keyword.tbl_name %}">Action</a>
+    <a class="dropdown-item" href="{% url 'home' %}">Another action</a>
+  </div>
+</div>
+      </td>
   </tr>
   {% endfor %}
 </table>
