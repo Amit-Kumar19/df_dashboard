@@ -1,0 +1,25 @@
+{%  extends 'apps/main.html' %}
+{% load static %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<table class="table table-hover">
+  <thead>
+  {% for col_name in col_names%}
+    <th>
+      {{col_name}}
+    </th>
+  {% endfor %}
+  </thead>
+  <tbody>
+  {% for d in data %}
+    <tr>
+      {% for i in d %}
+      <td> {{i}}</td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock%}

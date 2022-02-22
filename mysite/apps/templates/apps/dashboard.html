@@ -12,7 +12,7 @@
   background-image: url('/css/searchicon.png');
   background-position: 10px 10px;
   background-repeat: no-repeat;
-  width: 100%;
+  width: 80%;
   font-size: 16px;
   padding: 12px 20px 12px 40px;
   border: 1px solid #ddd;
@@ -41,23 +41,25 @@
 </style>
 </head>
 <body>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
-</script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 
 <h2>Data sources</h2>
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for objective.." title="Type in a name">
+<a class="btn btn-dark" id = "btnGet" href="{% url 'preview-page' 'revenuecode' %}"> Join</a>
 
 <table id="myTable">
   <tr class="header">
-    <th style="col">ID</th>
+    <th style="col">Select</th>
     <th style="col">Table</th>
     <th style="col">Key</th>
     <th style="col">Created</th>
   </tr>
   {% for keyword in keywords%}
   <tr>
-    <td>{{ keyword.id }}</td>
+    <td><input type="checkbox"/></td>
     <td>{{ keyword.tbl_name }}</td>
     <td>{{ keyword.meta_value }}</td>
     <td>{{keyword.date_created}}</td>
@@ -68,7 +70,7 @@
   </a>
 
   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    <a class="dropdown-item" href="{% url 'dots' keyword.tbl_name %}">Action</a>
+    <a class="dropdown-item" href="{% url 'preview-page' keyword.tbl_name %}">Preview</a>
     <a class="dropdown-item" href="{% url 'home' %}">Another action</a>
   </div>
 </div>
@@ -96,6 +98,32 @@ function myFunction() {
     }
   }
 }
+
 </script>
+<script type="text/javascript">
+    $(function () {
+        //Assign Click event to Button.
+        $("#btnGet").click(function () {
+            var message = "Table Key   Created\n";
+            var arr = [];
+            console.log("Hello world!");
+            //Loop through all checked CheckBoxes in GridView.
+            $("#myTable input[type=checkbox]:checked").each(function () {
+                var row = $(this).closest("tr")[0];
+
+                message += row.cells[1].innerHTML;
+                message += "   " + row.cells[2].innerHTML;
+                message += "   " + row.cells[3].innerHTML;
+                message += "\n";
+                arr.push(row.cells[1].innerHTML);
+            });
+            console.log(arr);
+            //Display selected Row data in Alert Box.
+            //alert(message);
+            return arr;
+        });
+    });
+</script>
+
 
 {% endblock%}

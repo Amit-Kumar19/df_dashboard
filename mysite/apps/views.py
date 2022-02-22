@@ -1,6 +1,7 @@
+import pandas as pd
 from django.shortcuts import render
 from .models import *
-
+import json
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, response
@@ -54,11 +55,11 @@ def logoutUser(request):
     return redirect('login')
 
 
-def geeks_view(request,pk):
+def geeks_view(request, pk):
     info = DbConnectionInfo.objects.filter(tbl_name=pk)
-    print(str(info.query))
-    context = {'connection_info': info}
-    print(info)
-    # return response
-    return render(request, "apps/dots.html",context)
-
+    db_name = [item.db_name for item in info][0]
+    df = pd.read_excel(f"data/{db_name}.{pk}.xlsx", sheet_name=0, nrows=5)
+    col_names = df.columns.tolist()
+    data = df.values.tolist()
+    context = {'data': data, 'col_names': col_names}
+    return render(request, "apps/preview.html", context)
