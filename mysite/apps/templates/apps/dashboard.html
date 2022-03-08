@@ -38,6 +38,10 @@
 #myTable tr.header, #myTable tr:hover {
   background-color: #f1f1f1;
 }
+
+#myTable td:hover {
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -48,33 +52,21 @@
 <h2>Data sources</h2>
 
 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for objective.." title="Type in a name">
-<a class="btn btn-dark" id = "btnGet" href="{% url 'preview-page' 'revenuecode' %}"> Join</a>
+<button type="button" class="btn btn-dark">Search</button>
 
 <table id="myTable">
   <tr class="header">
-    <th style="col">Select</th>
     <th style="col">Table</th>
     <th style="col">Key</th>
     <th style="col">Created</th>
   </tr>
   {% for keyword in keywords%}
   <tr>
-    <td><input type="checkbox"/></td>
+    <script>var val = {{ keyword.tbl_name }};</script>
+    <td style="display:none;"><a href="{% url 'preview-page' 'revenuecode' %}"></a></td>
     <td>{{ keyword.tbl_name }}</td>
     <td>{{ keyword.meta_value }}</td>
     <td>{{keyword.date_created}}</td>
-      <td>
-        <div class="dropdown show">
-  <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Options
-  </a>
-
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    <a class="dropdown-item" href="{% url 'preview-page' keyword.tbl_name %}">Preview</a>
-    <a class="dropdown-item" href="{% url 'home' %}">Another action</a>
-  </div>
-</div>
-      </td>
   </tr>
   {% endfor %}
 </table>
@@ -87,7 +79,7 @@ function myFunction() {
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[2];
+    td = tr[i].getElementsByTagName("td")[1];
     if (td) {
       txtValue = td.textContent || td.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -99,31 +91,19 @@ function myFunction() {
   }
 }
 
-</script>
-<script type="text/javascript">
-    $(function () {
-        //Assign Click event to Button.
-        $("#btnGet").click(function () {
-            var message = "Table Key   Created\n";
-            var arr = [];
-            console.log("Hello world!");
-            //Loop through all checked CheckBoxes in GridView.
-            $("#myTable input[type=checkbox]:checked").each(function () {
-                var row = $(this).closest("tr")[0];
+$(document).ready(function() {
 
-                message += row.cells[1].innerHTML;
-                message += "   " + row.cells[2].innerHTML;
-                message += "   " + row.cells[3].innerHTML;
-                message += "\n";
-                arr.push(row.cells[1].innerHTML);
-            });
-            console.log(arr);
-            //Display selected Row data in Alert Box.
-            //alert(message);
-            return arr;
-        });
+    $('#myTable tr').click(function() {
+        var href = $(this).find("a").attr("href");
+        if(href) {
+            window.location = href;
+        }
     });
+
+});
+
 </script>
+
 
 
 {% endblock%}
